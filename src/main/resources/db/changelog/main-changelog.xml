@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+        <changeSet id="1" author="kkurzela" failOnError="true" runAlways="false">
+            <comment>initial insert</comment>
+            <sqlFile path="initial/ROLE.sql" relativeToChangelogFile="true" encoding="utf8" />
+            <sqlFile path="initial/USER.sql" relativeToChangelogFile="true" encoding="utf8" />
+            <sqlFile path="initial/INITIAL_INSERT.sql" relativeToChangelogFile="true" encoding="utf8" />
+        </changeSet>
+
+</databaseChangeLog>
