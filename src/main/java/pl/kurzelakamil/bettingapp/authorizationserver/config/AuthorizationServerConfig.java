@@ -2,6 +2,7 @@ package pl.kurzelakamil.bettingapp.authorizationserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,9 +16,20 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import pl.kurzelakamil.bettingapp.authorizationserver.service.CustomUserDetailsService;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Value("${oauth2.config.client-id}")
+    private String clientId;
+
+    @Value("${oauth2.config.client-secret}")
+    private String clientSecret;
+
+    @Value("${oauth2.config.redirect-uris}")
+    private String redirectUris;
 
     @Autowired
     @Qualifier("authenticationManagerBean")
@@ -26,6 +38,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     public PasswordEncoder encoder;
 
+    @Autowired
+    public CustomUserDetailsService customUserDetailsService;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
@@ -33,14 +48,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("betting-app-v2-kasdlj").secret(encoder.encode("fDw7Mpkk5czHNuSRtmhGmAGL42CaxQB9"))
-                .redirectUris("http://localhost:8080/login").authorizedGrantTypes("authorization_code")
-                .scopes("user_info").autoApprove(true);
+        clients.inMemory()
+                .withClient(clientId)
+                .secret(encoder.encode(clientSecret))
+                .authorizedGrantTypes("authorization_code")
+                .scopes("user_info")
+                .autoApprove(true)
+                .redirectUris(redirectUris);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager);
+        endpoints.tokenStore(tokenStore()).accessTokenConverter(tokenEnhancer()).authenticationManager(authenticationManager);
     }
 
     @Bean
@@ -53,5 +72,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         return converter;
     }
-
 }
