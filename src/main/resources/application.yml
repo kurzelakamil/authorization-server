@@ -1,3 +1,15 @@
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://localhost:8089/eureka/
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 server:
   port: 7070
   servlet:
@@ -8,8 +20,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/authorization-db
     driver-class-name: org.postgresql.Driver
     jdbc-url: jdbc:postgresql://localhost:5432/authorization-db
-    username: '{cipher}0ab93e039f5de72e1d9774b0f7b3e4699c15f4232e34aa07f6ce32df904f0fd17c9b837d5443342ee5595cecdca41faa'
-    password: '{cipher}b2cbd09eda2eb9bd528d09c12d1b7dbba9a26a6bc7cff2d81c89fabaa9b1a1fd61276e858a593618b2901a4038399b60'
+    username: '{cipher}b0b3690817b522c75fbea0feaa7fc6290ac070841f7d3a884f0c5217f372ae582a33c9438378c46a1054625dfdfeaa73'
+    password: '{cipher}3e604c0341b5b3e28f5ea4c17ffcc6caba234652afe72cf6182210891e8982ab9afd14353e77fb1e364abda7ebf6f8b6'
     initialization-mode: always
     jpa:
       hibernate:
@@ -21,14 +33,22 @@ spring:
             lob:
               non_contextual_creation: true
       database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-config:
-  oauth2:
-    loginUrl: http://localhost:8080/auth/login
-    logoutSuccessUrl: http://localhost:8080/
-    clientid: betting-app-v2-kasdlj
-    clientSecret: fDw7Mpkk5czHNuSRtmhGmAGL42CaxQB9
-    redirectUris: http://localhost:8080/login/oauth2/code/
+  liquibase:
+    change-log: classpath:db/changelog/main-changelog.xml
+    enabled: true
 
-token:
-  accessTokenValiditySeconds: 3600
-  refreshTokenValiditySeconds: 18000
+#config:
+#  oauth2:
+#    #loginUrl: http://localhost:8080/login
+#    #logoutSuccessUrl: http://localhost:8080/
+#    clientid: betting-app-v2-kasdlj
+#    clientSecret: fDw7Mpkk5czHNuSRtmhGmAGL42CaxQB9
+#    #redirectUris: http://localhost:8080/login/oauth2/code/
+#    redirectUris: http://localhost:8080/login/oauth2/code
+#
+#token:
+#  accessTokenValiditySeconds: 3600
+#  refreshTokenValiditySeconds: 18000
+
+encrypt:
+  key: ${ENCRYPT_KEY}

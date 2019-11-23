@@ -12,8 +12,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -24,64 +22,44 @@ import pl.kurzelakamil.bettingapp.authorizationserver.service.CustomUserDetailsS
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${config.oauth2.clientid}")
+    @Value("${oauth2.config.client-id}")
     private String clientId;
 
-    @Value("${config.oauth2.clientSecret}")
+    @Value("${oauth2.config.client-secret}")
     private String clientSecret;
 
-  //  @Value("${config.oauth2.privateKey}")
-   // private String privateKey;
-
-   // @Value("${config.oauth2.publicKey}")
-   // private String publicKey;
-
-    @Value("${config.oauth2.redirectUris}")
-    private String RedirectUris;
-
-    @Value("${token.accessTokenValiditySeconds}")
-    private int accessTokenValiditySeconds;
-
-    @Value("${token.refreshTokenValiditySeconds}")
-    private int refreshTokenValiditySeconds;
+    @Value("${oauth2.config.redirect-uris}")
+    private String redirectUris;
 
     @Autowired
-    public PasswordEncoder passwordEncoder;
+    @Qualifier("authenticationManagerBean")
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    public PasswordEncoder encoder;
 
     @Autowired
     public CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    @Qualifier("authenticationManagerBean")
-    public AuthenticationManager authenticationManager;
-
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
     @Override
-    public void configure(ClientDetailsServiceConfigurer clients)
-            throws Exception {
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient(clientId)
-                .secret(passwordEncoder.encode(clientSecret))
-                .secret(clientSecret)
+                .secret(encoder.encode(clientSecret))
                 .authorizedGrantTypes("authorization_code")
                 .scopes("user_info")
                 .autoApprove(true)
-                .redirectUris(RedirectUris)
-                .accessTokenValiditySeconds(accessTokenValiditySeconds)
-                .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
+                .redirectUris(redirectUris);
     }
 
     @Override
-    public void configure(
-            AuthorizationServerEndpointsConfigurer endpoints)
-            throws Exception {
-        endpoints
-                .tokenStore(tokenStore())
-                .authenticationManager(authenticationManager);
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        endpoints.tokenStore(tokenStore()).accessTokenConverter(tokenEnhancer()).authenticationManager(authenticationManager);
     }
 
     @Bean
@@ -92,14 +70,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter tokenEnhancer() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        DefaultUserAuthenticationConverter duac = new DefaultUserAuthenticationConverter();
-        duac.setUserDetailsService(customUserDetailsService);
-        DefaultAccessTokenConverter datc = new DefaultAccessTokenConverter();
-        datc.setUserTokenConverter(duac);
-        converter.setAccessTokenConverter(datc);
-        //converter.setSigningKey(privateKey);
-        //converter.setVerifierKey(publicKey);
         return converter;
     }
-
 }
