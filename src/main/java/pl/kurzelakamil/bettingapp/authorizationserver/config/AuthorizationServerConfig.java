@@ -16,8 +16,6 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import pl.kurzelakamil.bettingapp.authorizationserver.service.CustomUserDetailsService;
-
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -31,15 +29,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${oauth2.config.redirect-uris}")
     private String redirectUris;
 
+    @Value("${oauth2.config.signingKey}")
+    private String signingKey;
+
     @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Autowired
     public PasswordEncoder encoder;
-
-    @Autowired
-    public CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -70,6 +68,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter tokenEnhancer() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(signingKey);
         return converter;
     }
 }
