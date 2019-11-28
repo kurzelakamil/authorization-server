@@ -8,3 +8,4 @@ Authorization Server based on protocol oauth2. Microservice for betting-app proj
 * based on authoriation_code flow
 * act as resource server retrieving user-info
 * liquibase
+* client of config-server and discovery-server
