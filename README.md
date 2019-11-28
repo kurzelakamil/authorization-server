@@ -1,6 +1,6 @@
 # authorization-server
 
-Authorization Server based on protocol oauth2. Microservice for betting-app project - https://github.com/kurzelakamil/betting-app:
+Authorization Server based on protocol oauth2. Microservice for betting-app project - https://github.com/kurzelakamil/betting-app
 
 * port 7070
 * inMemory JWT tokens, signed by symmetric key 
