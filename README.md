@@ -9,3 +9,4 @@ Authorization Server based on protocol oauth2. Microservice for betting-app proj
 * act as resource server retrieving user-info
 * liquibase
 * client of config-server and discovery-server
+* connected to rabbitMQ message-broker - communication with Saga Orchestrator

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class UserPrincipal extends org.springframework.security.core.userdetails.User {
 
     public UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities) {
