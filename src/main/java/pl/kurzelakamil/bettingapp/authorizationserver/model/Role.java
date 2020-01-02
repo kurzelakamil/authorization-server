@@ -17,9 +17,20 @@ import lombok.Setter;
 @Entity
 public class Role {
 
+    private static final Role USER = new Role(2L, RoleName.USER);
+
+    public enum RoleName{
+        ADMIN,
+        USER
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private RoleName name;
+
+    public static Role user(){
+        return USER;
+    }
 }
