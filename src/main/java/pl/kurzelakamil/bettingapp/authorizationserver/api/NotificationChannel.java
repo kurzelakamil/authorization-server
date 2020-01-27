@@ -5,18 +5,18 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
-public interface SagaClient {
+public interface NotificationChannel {
 
-    String USER_CREATED = "userCreated";
-    String SAGA_USER_APPROVED = "sagaUserApproved";
-    String SAGA_USER_REJECTED = "sagaUserRejected";
+    String CHECK_USER = "checkUser";
+    String APPROVE_USER = "approveUser";
+    String REJECT_USER = "rejectUser";
 
     @Input
-    SubscribableChannel userCreated();
+    SubscribableChannel checkUser();
 
     @Output
-    MessageChannel sagaUserApproved();
+    MessageChannel approveUser();
 
     @Output
-    MessageChannel sagaUserRejected();
+    MessageChannel rejectUser();
 }
