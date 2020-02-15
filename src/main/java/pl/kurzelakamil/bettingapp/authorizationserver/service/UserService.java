@@ -1,8 +1,9 @@
 package pl.kurzelakamil.bettingapp.authorizationserver.service;
 
-import java.util.Optional;
-
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import pl.kurzelakamil.bettingapp.authorizationserver.api.NotificationService;
@@ -12,36 +13,58 @@ import pl.kurzelakamil.bettingapp.authorizationserver.model.Role;
 import pl.kurzelakamil.bettingapp.authorizationserver.model.User;
 import pl.kurzelakamil.bettingapp.authorizationserver.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
 public class UserService {
 
     private static final UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
+    private JavaMailSender mailSender;
     private UserRepository userRepository;
     private NotificationService notificationService;
 
-    public void validateCreatedUser(CheckUserTransferObject checkUserTransferObject){
-        Optional<User> optionalUser = userRepository.findByEmail(checkUserTransferObject.getEmail());
-        if(optionalUser.isPresent()){
-            rejectCreatedUser(checkUserTransferObject.getId());
-        } else {
-            approveCreatedUser(checkUserTransferObject);
-        }
+    @Value("${activation.url}")
+    private String activationUrl;
+
+    public UserService(JavaMailSender mailSender, UserRepository userRepository, NotificationService notificationService){
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
-    private void approveCreatedUser(CheckUserTransferObject checkUserTransferObject){
+    public void validateUser(CheckUserTransferObject checkUserTransferObject){
+        userRepository.findByEmail(checkUserTransferObject.getEmail())
+                .ifPresentOrElse(user -> rejectUser(checkUserTransferObject.getId()), () -> prepareUserInPendingStatus(checkUserTransferObject));
+    }
+
+    public void activateUser(String token){
+        userRepository.findByVerificationToken(token).ifPresentOrElse(user -> approveUser(user), () -> new RuntimeException());
+    }
+
+    private void prepareUserInPendingStatus(CheckUserTransferObject checkUserTransferObject){
         User user = MAPPER.checkUserDtoToUser(checkUserTransferObject);
         user.setRole(Role.user());
         user.setUuid(checkUserTransferObject.getId());
+        user.generateVerificationToken();
+        sendActivationEmail(user);
+    }
+
+    private void approveUser(User user){
+        user.approveUser();
         userRepository.save(user);
         notificationService.approveUser(user);
     }
 
-    private void rejectCreatedUser(Long id){
+    private void rejectUser(Long id){
         notificationService.rejectUser(id);
+    }
+
+    private void sendActivationEmail(User user){
+        String url = activationUrl + "?token=" + user.getVerificationToken();
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(user.getEmail());
+        email.setSubject("Account activation");
+        email.setText(url);
+        mailSender.send(email);
     }
 
 }

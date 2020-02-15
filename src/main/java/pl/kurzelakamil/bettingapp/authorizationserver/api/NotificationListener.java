@@ -18,6 +18,6 @@ public class NotificationListener {
 
     @StreamListener(NotificationChannel.CHECK_USER)
     protected void checkUser(CheckUserTransferObject transferObject){
-        userService.validateCreatedUser(transferObject);
+        userService.validateUser(transferObject);
     }
 }

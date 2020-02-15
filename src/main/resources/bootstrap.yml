@@ -3,4 +3,6 @@ spring:
     name: authorization-server
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: http://${CONFIG_SERVER}:${CONFIG_SERVER_PORT}/
+      username: ${CONFIG_USER}
+      password: ${CONFIG_PASSWORD}
