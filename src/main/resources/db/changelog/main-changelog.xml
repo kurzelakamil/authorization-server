@@ -18,4 +18,14 @@
             <sql>UPDATE "role" SET "name" = 'ADMIN' WHERE id = 1</sql>
         </changeSet>
 
+        <changeSet id="3" author="kkurzela">
+            <comment>add status and verification_token columns to user_ table</comment>
+            <addColumn tableName="user_">
+                <column name="status" type="varchar(20)"></column>
+            </addColumn>
+            <addColumn tableName="user_">
+                <column name="verification_token" type="varchar(255)"></column>
+            </addColumn>
+        </changeSet>
+
 </databaseChangeLog>
