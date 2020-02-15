@@ -11,4 +11,6 @@ import pl.kurzelakamil.bettingapp.authorizationserver.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByVerificationToken(String token);
 }
