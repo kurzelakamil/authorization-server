@@ -6,6 +6,6 @@ spring:
   profiles: dev
   cloud:
     config:
-      uri: https://betting-app-config-server.herokuapp.com/
+      uri: http://${CONFIG_SERVER}:${CONFIG_SERVER_PORT}/
       username: ${CONFIG_USER}
       password: ${CONFIG_PASSWORD}

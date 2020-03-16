@@ -13,10 +13,7 @@ import pl.kurzelakamil.bettingapp.authorizationserver.model.Role;
 import pl.kurzelakamil.bettingapp.authorizationserver.model.User;
 import pl.kurzelakamil.bettingapp.authorizationserver.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
 public class UserService {
 
     private static final UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
@@ -27,6 +24,13 @@ public class UserService {
 
     @Value("${activation.url}")
     private String activationUrl;
+
+
+    public UserService(JavaMailSender mailSender, UserRepository userRepository, NotificationService notificationService){
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
+    }
 
     public void validateUser(CheckUserTransferObject checkUserTransferObject){
         userRepository.findByEmail(checkUserTransferObject.getEmail())
