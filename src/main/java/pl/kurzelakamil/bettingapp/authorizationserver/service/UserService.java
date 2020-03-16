@@ -25,6 +25,7 @@ public class UserService {
     @Value("${activation.url}")
     private String activationUrl;
 
+
     public UserService(JavaMailSender mailSender, UserRepository userRepository, NotificationService notificationService){
         this.mailSender = mailSender;
         this.userRepository = userRepository;
