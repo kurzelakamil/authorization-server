@@ -29,7 +29,7 @@ public class UserService {
         this.mailSender = mailSender;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
-    }
+
 
     public void validateUser(CheckUserTransferObject checkUserTransferObject){
         userRepository.findByEmail(checkUserTransferObject.getEmail())
