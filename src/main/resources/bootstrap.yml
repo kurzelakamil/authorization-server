@@ -1,9 +1,6 @@
 spring:
   application:
     name: authorization-server
----
-spring:
-  profiles: dev
   cloud:
     config:
       uri: http://${CONFIG_SERVER}:${CONFIG_SERVER_PORT}/

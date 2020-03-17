@@ -33,4 +33,5 @@ out/
 
 src/main/resources/application.yml
 
-.jar
+*.jar
+
