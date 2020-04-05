@@ -15,6 +15,7 @@ import pl.kurzelakamil.bettingapp.authorizationserver.model.UserPrincipal;
 import pl.kurzelakamil.bettingapp.authorizationserver.repository.UserRepository;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,7 +48,7 @@ public class CustomUserDetailsServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadUserByUsername_usernameNotFound(){
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmailOrUuid(anyString(), anyLong())).thenReturn(Optional.empty());
 
         customUserDetailsService.loadUserByUsername("testEmail");
     }

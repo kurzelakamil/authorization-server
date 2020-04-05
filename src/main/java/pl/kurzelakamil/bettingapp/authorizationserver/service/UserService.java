@@ -6,8 +6,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import pl.kurzelakamil.bettingapp.authorizationserver.api.NotificationService;
+import pl.kurzelakamil.bettingapp.authorizationserver.notification.NotificationService;
 import pl.kurzelakamil.bettingapp.authorizationserver.dto.CheckUserTransferObject;
+import pl.kurzelakamil.bettingapp.authorizationserver.exception.UserNotFoundException;
 import pl.kurzelakamil.bettingapp.authorizationserver.mapper.UserMapper;
 import pl.kurzelakamil.bettingapp.authorizationserver.model.Role;
 import pl.kurzelakamil.bettingapp.authorizationserver.model.User;
@@ -32,12 +33,12 @@ public class UserService {
     }
 
     public void validateUser(CheckUserTransferObject checkUserTransferObject){
-        userRepository.findByEmail(checkUserTransferObject.getEmail())
+        userRepository.findByEmailOrUuid(checkUserTransferObject.getEmail(), checkUserTransferObject.getId())
                 .ifPresentOrElse(user -> rejectUser(checkUserTransferObject.getId()), () -> prepareUserInPendingStatus(checkUserTransferObject));
     }
 
     public void activateUser(String token){
-        userRepository.findByVerificationToken(token).ifPresentOrElse(user -> approveUser(user), () -> new RuntimeException());
+        userRepository.findByVerificationToken(token).ifPresentOrElse(user -> approveUser(user), () -> {throw UserNotFoundException.verificationTokenInvalid();});
     }
 
     private void prepareUserInPendingStatus(CheckUserTransferObject checkUserTransferObject){
@@ -46,6 +47,7 @@ public class UserService {
         user.setUuid(checkUserTransferObject.getId());
         user.generateVerificationToken();
         sendActivationEmail(user);
+        userRepository.save(user);
     }
 
     private void approveUser(User user){
@@ -66,5 +68,4 @@ public class UserService {
         email.setText(url);
         mailSender.send(email);
     }
-
 }

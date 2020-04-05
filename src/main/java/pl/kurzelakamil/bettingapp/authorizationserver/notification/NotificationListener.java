@@ -1,4 +1,4 @@
-package pl.kurzelakamil.bettingapp.authorizationserver.api;
+package pl.kurzelakamil.bettingapp.authorizationserver.notification;
 
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;

@@ -1,6 +1,6 @@
 package pl.kurzelakamil.bettingapp.authorizationserver.dto;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,5 +12,5 @@ import lombok.Setter;
 public class HeaderDto {
 
     private String sender;
-    private OffsetDateTime timeStamp;
+    private LocalDateTime timeStamp;
 }

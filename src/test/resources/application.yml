@@ -2,6 +2,8 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/test-changelog.xml
     enabled: true
+    parameters:
+      run-data-sql: true
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -20,3 +22,6 @@ oauth2:
     client-secret: test
     redirect-uris: http://localhost:8080/login
     signingKey: test
+
+activation:
+  url: /users/activation
