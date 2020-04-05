@@ -6,7 +6,7 @@ Authorization Server based on protocol oauth2. Microservice for betting-app proj
 * inMemory JWT tokens, signed by symmetric key 
 * postgresql database - to store users and roles data 
 * based on authoriation_code flow
-* act as resource server retrieving user-info
+* act also as resource server retrieving user-info
 * liquibase
 * client of config-server and discovery-server
-* connected to rabbitMQ message-broker - communication with Saga Orchestrator
+* connected to rabbitMQ message-broker
