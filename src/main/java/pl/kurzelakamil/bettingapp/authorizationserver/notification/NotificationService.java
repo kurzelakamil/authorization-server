@@ -1,4 +1,4 @@
-package pl.kurzelakamil.bettingapp.authorizationserver.api;
+package pl.kurzelakamil.bettingapp.authorizationserver.notification;
 
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.Message;
@@ -29,7 +29,7 @@ public class NotificationService {
     @SendTo(NotificationChannel.REJECT_USER)
     public void rejectUser(Long id){
         RejectUserTransferObject transferObject = new RejectUserTransferObject(id);
-        transferObject.setUserAlreadyExistsReason();;
+        transferObject.setUserAlreadyExistsReason();
         Message<RejectUserTransferObject> message = MessageBuilder.withPayload(transferObject).build();
         notificationChannel.rejectUser().send(message);
     }

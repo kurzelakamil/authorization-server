@@ -1,0 +1,9 @@
+{
+  "header":{
+    "sender": "user-service",
+    "timeStamp": null
+  },
+  "id": 999,
+  "email": "testEmail999",
+  "password": "testHashedPassword"
+}

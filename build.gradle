@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.liquibase:liquibase-core:3.8.0'
     implementation 'org.springframework.security:spring-security-jwt:1.0.10.RELEASE'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation 'com.icegreen:greenmail:1.5.11'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"

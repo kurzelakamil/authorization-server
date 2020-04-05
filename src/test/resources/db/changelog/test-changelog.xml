@@ -14,8 +14,8 @@
 
     <changeSet id="2" author="kkurzela">
         <comment>add new role</comment>
-        <sql>INSERT INTO "role" VALUES(2, 'USER')</sql>
-        <sql>UPDATE "role" SET "name" = 'ADMIN' WHERE id = 1</sql>
+        <sql>INSERT INTO `role` VALUES(2, 'USER')</sql>
+        <sql>UPDATE `role` SET `name` = 'ADMIN' WHERE id = 1</sql>
     </changeSet>
 
 </databaseChangeLog>

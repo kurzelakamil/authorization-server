@@ -42,9 +42,9 @@ public class User {
 
     private String verificationToken;
 
-    private enum UserStatus{
+    public enum UserStatus {
         PENDING,
-        APPROVED,
+        ACTIVE,
         REJECTED;
     }
 
@@ -53,6 +53,6 @@ public class User {
     }
 
     public void approveUser(){
-        status = UserStatus.APPROVED;
+        status = UserStatus.ACTIVE;
     }
 }
